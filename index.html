@@ -8,23 +8,12 @@
         .contenedor { width: 95%; max-width: 750px; padding: 40px 0; display: flex; flex-direction: column; align-items: center; z-index: 2; }
         .foto-video { width: 100%; border-radius: 20px; border: 6px solid white; margin: 20px 0; }
         .frase { font-size: 1.3rem; line-height: 1.6; text-align: center; margin: 30px 0; }
-
         .botones-container { display: flex; justify-content: center; gap: 20px; margin-top: 30px; position: relative; width: 100%; }
         .btn { padding: 15px 30px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
         #btnSi { background: #2e7d32; color: white; }
-
-        /* Cambiado a absolute para que se mueva dentro de la página y no se pegue al scroll */
         #btnNo { background: #e57373; color: white; position: absolute; z-index: 100; }
-
         #modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0b1a10; border: 2px solid white; padding: 40px; border-radius: 30px; text-align: center; z-index: 1000; width: 80%; max-width: 500px; }
-
-        .btn-final {
-            padding: 18px 35px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 1.2rem;
-            background: linear-gradient(135deg, #57cc99, #2d6a4f); color: white; margin-top: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.3s ease;
-        }
-        .btn-final:hover { transform: scale(1.05); }
-
+        .btn-final { padding: 18px 35px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: linear-gradient(135deg, #57cc99, #2d6a4f); color: white; margin-top: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.3s ease; }
         .estrella { position: absolute; color: rgba(255,255,255,0.3); font-size: 20px; pointer-events: none; animation: flotar linear infinite; }
         @keyframes flotar { 0% { transform: translateY(100vh); } 100% { transform: translateY(-10vh); } }
     </style>
@@ -35,7 +24,9 @@
     <button class="btn" onclick="iniciar()" style="background:#57cc99; font-size: 1.5rem;">Para mi bebito fiu fiu ❤️</button>
 </div>
 
-<audio id="musica" loop><source src="musica.mp3"></audio>
+<audio id="musica" loop preload="auto">
+    <source src="musica.mp3" type="audio/mpeg">
+</audio>
 
 <div class="contenedor">
     <h1>Para mi persona favorita... 👑❤️</h1>
@@ -77,13 +68,24 @@
 
 <script>
     function iniciar() {
+        // Ocultar inicio
         document.getElementById('pantallaInicio').style.display = 'none';
-        // Reproducir música tras el primer clic
+        
+        // Intentar reproducir música
         const audio = document.getElementById('musica');
-        audio.play();
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                // Reproducción exitosa
+            }).catch(error => {
+                console.log("Autoplay bloqueado, el usuario debe hacer click.");
+            });
+        }
+        
         setInterval(crearEstrella, 800);
     }
-
+    
     function crearEstrella() {
         const e = document.createElement('div');
         e.innerHTML = '★'; e.className = 'estrella';
@@ -98,7 +100,8 @@
         const contenedor = document.querySelector('.contenedor');
         const maxX = contenedor.offsetWidth - btnNo.offsetWidth;
         const maxY = contenedor.offsetHeight - btnNo.offsetHeight;
-
+        
+        btnNo.style.position = 'absolute';
         btnNo.style.left = Math.random() * maxX + 'px';
         btnNo.style.top = Math.random() * maxY + 'px';
     }
