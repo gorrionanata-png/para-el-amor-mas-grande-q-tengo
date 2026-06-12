@@ -8,13 +8,18 @@
         .contenedor { width: 95%; max-width: 750px; padding: 40px 0; display: flex; flex-direction: column; align-items: center; z-index: 2; }
         .foto-video { width: 100%; border-radius: 20px; border: 6px solid white; margin: 20px 0; }
         .frase { font-size: 1.3rem; line-height: 1.6; text-align: center; margin: 30px 0; }
+        
         .botones-container { display: flex; justify-content: center; gap: 20px; margin-top: 30px; position: relative; width: 100%; }
         .btn { padding: 15px 30px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: 0.3s; }
         #btnSi { background: #2e7d32; color: white; }
-        #btnNo { background: #e57373; color: white; position: absolute; z-index: 100; }
+        #btnNo { background: #e57373; color: white; position: absolute; z-index: 100; transition: all 0.2s ease; }
+        
         #modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0b1a10; border: 2px solid white; padding: 40px; border-radius: 30px; text-align: center; z-index: 1000; width: 80%; max-width: 500px; }
+        
         .btn-final { padding: 18px 35px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 1.2rem; background: linear-gradient(135deg, #57cc99, #2d6a4f); color: white; margin-top: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.3s ease; }
-        .estrella { position: absolute; color: rgba(255,255,255,0.3); font-size: 20px; pointer-events: none; animation: flotar linear infinite; }
+        .btn-final:hover { transform: scale(1.05); }
+
+        .estrella { position: fixed; color: rgba(255,255,255,0.3); font-size: 20px; pointer-events: none; animation: flotar linear infinite; }
         @keyframes flotar { 0% { transform: translateY(100vh); } 100% { transform: translateY(-10vh); } }
     </style>
 </head>
@@ -24,14 +29,14 @@
     <button class="btn" onclick="iniciar()" style="background:#57cc99; font-size: 1.5rem;">Para mi bebito fiu fiu ❤️</button>
 </div>
 
-<audio id="musica" loop preload="auto">
+<audio id="musica" loop>
     <source src="musica.mp3" type="audio/mpeg">
 </audio>
 
 <div class="contenedor">
     <h1>Para mi persona favorita... 👑❤️</h1>
     <div style="display:flex; gap:10px; width: 100%;">
-        <img src="máscaras.jpeg" class="foto-video" style="width:48%;">
+        <img src="mascaras.jpeg" class="foto-video" style="width:48%;">
         <img src="mascarillas.jpeg" class="foto-video" style="width:48%;">
     </div>
     <p class="frase">Amor, solo quería recordarte antes de tu examen lo orgullosa que estoy de ti. Sé lo importante que es para ti y también sé todo el esfuerzo, tiempo y dedicación que le has puesto. A veces eres más duro contigo mismo de lo que deberías, pero quiero que recuerdes algo: eres una persona increíblemente inteligente, capaz y trabajadora.</p>
@@ -62,28 +67,17 @@
 <div id="modal">
     <h2>¡Esa es la actitud, mi amor! 🏆🎉</h2>
     <p>Sabía que ibas a decir que sí. Ahora ve con toda la seguridad del mundo a romper ese examen. ¡Cómete el mundo, que aquí voy a estar esperándote para celebrar!</p>
-    <p><b>¡Te amo muchísimo! ❤️</b></p>
+    <p><b>¡Te amo muchísimo! ❤️🚀</b></p>
     <button class="btn-final" onclick="location.reload()">Te voy a llevar en mi corazón siempre ❤️</button>
 </div>
 
 <script>
     function iniciar() {
-        // Ocultar inicio
         document.getElementById('pantallaInicio').style.display = 'none';
-        
-        // Intentar reproducir música
         const audio = document.getElementById('musica');
-        const playPromise = audio.play();
-        
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                // Reproducción exitosa
-            }).catch(error => {
-                console.log("Autoplay bloqueado, el usuario debe hacer click.");
-            });
-        }
-        
+        audio.play();
         setInterval(crearEstrella, 800);
+        moverBoton();
     }
     
     function crearEstrella() {
@@ -94,14 +88,13 @@
         document.body.appendChild(e);
         setTimeout(() => e.remove(), 8000);
     }
-
+    
     function moverBoton() {
         const btnNo = document.getElementById('btnNo');
-        const contenedor = document.querySelector('.contenedor');
-        const maxX = contenedor.offsetWidth - btnNo.offsetWidth;
-        const maxY = contenedor.offsetHeight - btnNo.offsetHeight;
+        const container = document.querySelector('.contenedor');
+        const maxX = container.offsetWidth - btnNo.offsetWidth;
+        const maxY = container.offsetHeight - btnNo.offsetHeight;
         
-        btnNo.style.position = 'absolute';
         btnNo.style.left = Math.random() * maxX + 'px';
         btnNo.style.top = Math.random() * maxY + 'px';
     }
